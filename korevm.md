@@ -2,6 +2,8 @@ Kore VM is based on LUA version 5.1 and is supposedly compatible with that versi
 
 All the scripts in the game are compiled to bytecode with debug information stripped.
 
+#### Header
+
 The header of these is slightly different from standard luac files:
 
     1b 4c 75 61 51 08 00 04 04 04 04 01 01
@@ -19,8 +21,12 @@ The header of these is slightly different from standard luac files:
 
 More information on lua format: http://luaforge.net/docman/83/98/
 
+#### Functions
+
 Lua can be extended with C code, which is what the developers used to add tons of new functions, ready to be used from scripts.
 These are listed in the functions.txt file.
+
+#### Opcodes
 
 The instruction set of the bytecode is greatly expanded. 86 opcodes vs lua's original 38.
 
@@ -113,3 +119,74 @@ Byte|Mode|A|B|C|?|?|?|Opcode
 54|0|1|3|1|0|0|56|GETSLOT_D
 55|1|1|5|1|1|0|56|GETGLOBAL_MEM
 56|0|0|0|0|0|0|56|OPCODE_MAX
+
+
+#### Lua state
+
+In Lua, the lua_State is very important. It gets passed to almost every function.
+
+In regular Lua the state looks like this:
+```C
+struct lua_State {
+  GCObject *next; 
+  lu_byte tt; 
+  lu_byte marked;
+  lu_byte status;
+  StkId top;  /* first free slot in the stack */
+  StkId base;  /* base of current function */
+  global_State *l_G;
+  CallInfo *ci;  /* call info for current function */
+  const Instruction *savedpc;  /* `savedpc' of current function */
+  StkId stack_last;  /* last free slot in the stack */
+  StkId stack;  /* stack base */
+  CallInfo *end_ci;  /* points after end of ci array*/
+  CallInfo *base_ci;  /* array of CallInfo's */
+  int stacksize;
+  int size_ci;  /* size of array `base_ci' */
+  unsigned short nCcalls;  /* number of nested C calls */
+  unsigned short baseCcalls;  /* nested C calls when resuming coroutine */
+  lu_byte hookmask;
+  lu_byte allowhook;
+  int basehookcount;
+  int hookcount;
+  lua_Hook hook;
+  TValue l_gt;  /* table of globals */
+  TValue env;  /* temporary place for environments */
+  GCObject *openupval;  /* list of open upvalues in this stack */
+  GCObject *gclist;
+  struct lua_longjmp *errorJmp;  /* current error recover point */
+  ptrdiff_t errfunc;  /* current error handling function (stack index) */
+};
+```
+
+In kore vm this apparently works a bit differently. This is what I've got so far.
+```C
+struct lua_State
+{
+  lu_byte tt_maybe;
+  lu_byte marked_maybe;
+  lu_byte status_maybe;
+  char unknown_byte;
+  int *unknown0;
+  global_State *l_G;
+  int *unknown2;
+  int *stack_last;
+  int *base;
+  int unknown3;
+  int unknown4;
+  int unknown5;
+  int *top;
+  int *stack;
+  int *unknown6;
+  int *unknown7;
+  int unknown8;
+  int l_gt;
+  int *unknown10;
+  int env_maybe;
+  int unknown12;
+  int unknown13;
+  int unknown14;
+  int unknown15;
+  int *GC_maybe;
+};
+```
