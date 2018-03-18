@@ -22,3 +22,4 @@ Eventually it may be possible to create a patch to fix some of the most game-bre
 
 - BIG file extractor: http://raptor-cestiny.cz/download/kingdoms-of-amalur-reckoning-big-files-extractor.html
 - LUA C interface https://www.lua.org/pil/24.html
+- LUA 5.1 vm introduction http://luaforge.net/docman/83/98/ANoFrillsIntroToLua51VMInstructions.pdf
