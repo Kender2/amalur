@@ -2,6 +2,8 @@ Kore VM is based on LUA version 5.1 and is supposedly compatible with that versi
 
 All the scripts in the game are compiled to bytecode with debug information stripped.
 
+Intro into lua internals https://www.lua.org/doc/jucs05.pdf
+
 #### Header
 
 The header of these is slightly different from standard luac files:
@@ -25,6 +27,8 @@ More information on lua format: http://luaforge.net/docman/83/98/
 
 Lua can be extended with C code, which is what the developers used to add tons of new functions, ready to be used from scripts.
 These are listed in the functions.txt file.
+
+See https://www.lua.org/pil/24.html for more information on the topic.
 
 #### Opcodes
 
